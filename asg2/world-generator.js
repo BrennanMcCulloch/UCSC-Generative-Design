@@ -1,10 +1,16 @@
 class WorldGenerator {
-	constructor(x, y, z, _cubeSize, _seed) {
+	constructor(x, y, z, _cubeSize, _seed, _deep, _shallow, _sand, _grass, _mountain, _snow) {
 		this.width = x;
 		this.length = y;
 		this.totalDepth = z;
 		this.cubeSize = _cubeSize;
 		this.seed = _seed;
+		this.deep = _deep;
+		this.shallow = shallow;
+		this.sand = _sand;
+		this.grass = _grass;
+		this.mountain = _mountain;
+		this.snow = _snow;
 	}
 
 	createWorld() {
@@ -15,13 +21,14 @@ class WorldGenerator {
 			var tempEmp = [];
 			this.worldArray.push(tempEmp); //Fill the array with empty arrays
 			for(var y = 0; y < this.length; y++) {
-				var heightVal = Math.round(this.totalDepth * noise(x, y)); //Integer height for each space
+				var heightVal = Math.round(this.totalDepth * noise(0.08 * x, 0.08 * y));
 				this.worldArray[x].push(heightVal); //Push it into the array, making it 2d
 			}
 		}
 	}
 
 	drawWorld() {
+		//NOTE: ALL OF THESE TEXTURES WERE STOLEN OFF GOOGLE. I did not make these. I made the code.
 		var boundary = this.totalDepth / 6;
 		translate(-width/2, height/2, -200); //resetting camera position
 
@@ -29,32 +36,41 @@ class WorldGenerator {
 			for(var y = 0; y < this.length; y++) {
 				push();
 				if(this.worldArray[x][y] <= Math.round(boundary * 1)) { //deep water
-					fill(0, 0, 139);
+					texture(this.deep);
 				}
 				else if(this.worldArray[x][y] <= Math.round(boundary * 2)) { //shallow water
-					fill(0, 191, 255);
+					texture(this.shallow);
 				}
 				else if(this.worldArray[x][y] <= Math.round(boundary * 3)) { //sand
-					fill(194, 178, 128);
+					texture(this.sand);
 				}
 				else if(this.worldArray[x][y] <= Math.round(boundary * 4)) { //grass
-					fill(133, 178, 76);
+					texture(this.grass);
 				}
 				else if(this.worldArray[x][y] <= Math.round(boundary * 5)) { //mountain
-					fill(160, 82, 45);
+					texture(this.mountain);
 				}
 				else if(this.worldArray[x][y] <= Math.round(boundary * 6)) { //snowy mountain
-					fill(255, 250, 250);
+					texture(this.snow);
 				}
-				else {//math fucked up
+				else {//math messed up
 					exit(0);
 				}
 
 				translate(x*this.cubeSize, 0, y*this.cubeSize);
-				box(this.cubeSize);
-				for(var z = 0; z < this.worldArray[x][y]; z++) {
+				for(var z = 0; z <= this.worldArray[x][y]; z++) {
 					translate(0, -this.cubeSize, 0);
-					box(this.cubeSize);
+					//If it's the highest block there
+					if(z == this.worldArray[x][y]){
+						box(this.cubeSize);
+					}
+
+					//If it's higher than any other block immediately nearby (except edges)
+					if(x > 0 && x < this.width - 1 && y > 0 && y < this.length - 1) {
+						if(z > this.worldArray[x-1][y] || z > this.worldArray[x][y-1] || z > this.worldArray[x+1][y] || z > this.worldArray[x][y+1]) {
+							box(this.cubeSize);
+						}
+					}
 				}
 				pop();
 			}

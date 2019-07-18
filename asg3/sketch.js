@@ -1,4 +1,4 @@
-var prodRules, axiom;
+var prodRules, axiom, box;
 function setup() {
 	createCanvas(500, 500);
 	background(200);
@@ -16,12 +16,12 @@ function setup() {
 	prodRules = new GenerativeGrammar(array);
 	axiom = "A";
 
-	textSize(30);
+	box = new DialogBox(350);
 }
 
 function draw() {
 	background(200);
-	text(axiom, 10, 60);
+	box.makeDialog(axiom);
 }
 
 function mousePressed() {

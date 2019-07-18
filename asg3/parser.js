@@ -20,11 +20,9 @@ class GenerativeGrammar{
 				}
 				arrayPos++;
 			}
-
+			//Non-deterministic because of random
 			newString += this.prodRules[arrayPos].results[Math.round((random() * (this.prodRules[arrayPos].results.length - 1)))];
 		}
-
 		return newString;
 	}
-
 }

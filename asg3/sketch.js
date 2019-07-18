@@ -15,10 +15,13 @@ function setup() {
 	var array = [aA, bB, cC, dD];
 	prodRules = new GenerativeGrammar(array);
 	axiom = "A";
+
+	textSize(30);
 }
 
 function draw() {
-
+	background(200);
+	text(axiom, 10, 60);
 }
 
 function mousePressed() {

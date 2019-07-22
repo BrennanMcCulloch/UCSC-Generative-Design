@@ -1,4 +1,4 @@
-var prodRules, axiom, box;
+var prodRules, axiom, box, playerX, playerY, npc;
 function setup() {
 	createCanvas(500, 500);
 	background(200);
@@ -15,18 +15,40 @@ function setup() {
 	var array = [aA, bB, cC, dD];
 	prodRules = new GenerativeGrammar(array);
 	axiom = "A";
-
 	box = new DialogBox(350);
+
+	npc = new NPC(axiom, prodRules, box, width/2, height/2);
+
+	playerX = 50;
+	playerY = 200;
 }
 
 function draw() {
 	background(200);
-	box.makeDialog(axiom);
+	npc.displayNPC(playerX, playerY);
+	circle(playerX, playerY, 50);
+
+	if(keyIsDown(87)) { //W (move forward)
+		playerY-=2;
+	}
+	if(keyIsDown(65)) { //A (move left)
+		playerX-=2;
+	}
+	if(keyIsDown(83)) { //S (move back)
+		playerY+=2;
+	}
+	if(keyIsDown(68)) { //D (move right)
+		playerX+=2;
+	}
 }
 
-function mousePressed() {
-	console.log(axiom);
-	var changed = prodRules.iterate(axiom);
-	console.log(changed);
-	axiom = changed;
+function keyPressed() {
+	if (keyCode == 89) { //Y
+		npc.increaseVariable();
+		axiom = prodRules.iterate(axiom);
+	}
+	if (keyCode == 78) { //N
+		axiom = "A";
+		npc.resetVariable();
+	}
 }

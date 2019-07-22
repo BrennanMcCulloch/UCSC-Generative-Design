@@ -16,4 +16,10 @@ class DialogBox {
 		rect(10, this.posY, width-20, height/4);
 		text(string, 10, this.posY, width-20, height/4);
 	}
+
+	displayDialog(string) {
+		textSize(15);
+		rect(10, this.posY, width-20, height/4);
+		text(string, 10, this.posY, width-20, height/4);
+	}
 }
